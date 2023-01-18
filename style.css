@@ -119,9 +119,9 @@ html {
 
 /* explanation of 1fr: https://css-tricks.com/introduction-fr-css-unit/ */ 
 /* explanation of auto-fill: https://www.w3.org/TR/css3-grid-layout/#fr-unit */
-#grid {
+/* #grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25ch, 1fr));
+  grid-template-columns: /*repeat(auto-fill, minmax(25ch, 1fr)); 
   grid-gap: 5px;
 }
 
@@ -129,6 +129,7 @@ html {
   background-color: black;
   aspect-ratio: 1;
 }
+*/
 
 /* uncomment the CSS below to add a red border to every html object */
 /* 
