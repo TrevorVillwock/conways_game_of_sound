@@ -117,12 +117,17 @@ html {
   cursor: pointer;
 }
 
-/* explanation of 1fr: https://css-tricks.com/introduction-fr-css-unit/ */ 
-/* explanation of auto-fill: https://www.w3.org/TR/css3-grid-layout/#fr-unit */
+/* explanation of 1fr: https://css-tricks.com/introduction-fr-css-unit/
+explanation of auto-fill: https://www.w3.org/TR/css3-grid-layout/#fr-unit
+"ch" is a unit of space equal to a "0" (zero) in the font being used. */
 #grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25ch, 1fr));
-  grid-gap: 5px;
+  /* grid-template-columns: repeat(auto-fill, minmax(25ch, 1fr)); */
+  /* grid-template-rows: repeat(autofill, minmax(25ch, 1fr)); */
+  grid-template-columns: repeat(10, 200px);
+  grid-template-rows: repeat(10, 200px);
+  row-gap: 5px;
+  column-gap: 5px;
 }
 
 #grid div {
