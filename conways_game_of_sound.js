@@ -4,7 +4,7 @@
 let grid;
 
 let rows = 10;
-let columns = 100;
+let columns = 10;
 
 window.onload = () => {
     // Create grid of squares
@@ -14,23 +14,25 @@ window.onload = () => {
     //let newRow = document.createElement("div");
     //grid.appendChild(newRow);
 
-    for (let j = 0; j < columns; ++j) {
-        console.log("making rows");
-        let newColumn = document.createElement("div");
-        let divId = `r1c${j}`;
-        newColumn.id = divId;
-        grid.appendChild(newColumn);
-    }
-
-    // for (let i = 0; i < rows; ++i) {
-    //     for (let j = 0; j < columns; ++j) {
-    //         let newColumn = document.createElement("div");
-    //         let divId = `r${i}c${j}`;
-    //         newColumn.id = divId;
-    //         newRow.appendChild(newColumn);
-    //     }
+    // for (let j = 0; j < columns; ++j) {
+    //     console.log("making rows");
+    //     let newColumn = document.createElement("div");
+    //     let divId = `r1c${j}`;
+    //     newColumn.id = divId;
+    //     grid.appendChild(newColumn);
     // }
 
+    for (let i = 0; i < rows; ++i) {
+        for (let j = 0; j < columns; ++j) {
+            let newSquare = document.createElement("div");
+            let divId = `r${i}c${j}`;
+            newSquare.id = divId;
+            newSquare.addEventListener("click", () => {
+                newSquare.style.backgroundColor = "white"; 
+            })
+            grid.appendChild(newSquare);
+        }
+    }
 }
 
 
