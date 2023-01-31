@@ -36,7 +36,7 @@ window.onload = () => {
         }
     }
 
-    setInterval(1000, advanceClock());
+    setInterval(advanceClock, 1000);
 }
 
 function closeModal() {
