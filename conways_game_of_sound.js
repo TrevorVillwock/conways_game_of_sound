@@ -1,12 +1,9 @@
-//let squares = document.getElementById("grid");
-
-//squares.style.color = "blue";
 let grid;
-
 let rows = 10;
 let columns = 10;
-let squares = Array(rows);
 
+// Create a 2D Array 
+let squares = Array(rows);
 for (let i = 0; i < rows; ++i) {
     squares[i] = new Array(columns);
 }
@@ -30,13 +27,14 @@ window.onload = () => {
                     newSquare.style.backgroundColor = "white";
                     newSquare.setAttribute("alive", "1");
                 } 
+                console.log("toggling square " + divId);
             })
             grid.appendChild(newSquare);
             squares[i][j] = newSquare;
         }
     }
 
-    setInterval(advanceClock, 1000);
+    // setInterval(advanceClock, 1000);
 }
 
 function closeModal() {
@@ -59,39 +57,55 @@ function advanceClock () {
               
             All neighbors
             Top border: no upper neighbors, i = 0
-            Right border: no right neighbors, j = columns
-            Bottom border: no bottom neighbors, i = rows
+            Right border: no right neighbors, j = columns - 1
+            Bottom border: no bottom neighbors, i = rows - 1
             Left border: no left neighbors, j = 0
-            Corners: only three neighbors, 
+            Corners: only three neighbors 
             */
             
-            if (i != 0) {
-                if (squares[i-1][j] != undefined && squares[i-1][j].alive == "1")
-                    neighborCount++;
-                if (squares[i-1][j+1] != undefined && squares[i-1][j+1].alive == "1")
-                    neighborCount++;
-            }
+            // Top row 
+            /*
+            if (i = 0) {
+                // Top left corner
+                if (j = 0) {
+                    if (squares[i][j + 1].alive == "1")
+                        neighborCount++;
+                    if (squares[i+1][j].alive == "1")
+                        neighborCount++; 
+                    if (squares[i+1][j+1].alive == "1")
+                        neighborCount++;   
+                }
+                /*
+                else if (j = columns - 1) {
 
-            else if (i != rows - 1) {
-                if (squares[i+1][j] != undefined && squares[i+1][j].alive == "1")
-                    neighborCount++;
-                if (squares[i+1][j-1] != undefined && squares[i+1][j-1].alive == "1")
-                    neighborCount++;
-                if (squares[i+1][j+1] != undefined && squares[i+1][j+1].alive == "1")
-                    neighborCount++;
-            }
+                }
+                else {
 
-            else if (j != 0) {
-                if (squares[i][j-1] != undefined && squares[i][j-1].alive == "1")
-                    neighborCount++;
-                if (squares[i+1][j-1] != undefined && squares[i+1][j-1].alive == "1")
-                    neighborCount++;
+                } 
+                */
+                /*
+                console.log(neighborCount); 
             }
+            */
 
-            else if (i != 0 && j != 0) {
-                if (squares[i-1][j-1] != undefined && squares[i-1][j-1].alive == "1")
+            /*
+            if (squares[i-1][j] != undefined && squares[i-1][j].alive == "1")
                 neighborCount++;
-            }
+            if (squares[i-1][j+1] != undefined && squares[i-1][j+1].alive == "1")
+                neighborCount++;
+            if (squares[i+1][j] != undefined && squares[i+1][j].alive == "1")
+                neighborCount++;
+            if (squares[i+1][j-1] != undefined && squares[i+1][j-1].alive == "1")
+                neighborCount++;
+            if (squares[i+1][j+1] != undefined && squares[i+1][j+1].alive == "1")
+                neighborCount++;
+            if (squares[i][j-1] != undefined && squares[i][j-1].alive == "1")
+                neighborCount++;
+            if (squares[i-1][j-1] != undefined && squares[i-1][j-1].alive == "1")
+                neighborCount++;
+            if (squares[i+1][j-1] != undefined && squares[i+1][j-1].alive == "1")
+                neighborCount++;
+            */
 
             /*
             if (squares[i+1][j].alive == "1")
@@ -108,7 +122,7 @@ function advanceClock () {
                 neighborCount++;
             */
 
-            console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
+            // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
         }
     }
 }
