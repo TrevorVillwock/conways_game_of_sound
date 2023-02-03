@@ -2,8 +2,9 @@ let grid;
 let rows = 10;
 let columns = 10;
 let neighborCount = 0;
+let running = 0; // Boolean for whether clock is running 
 
-// Create a 2D Array 
+// Create a 2D Array to represent the grid for conway's game of life
 let squares = Array(rows);
 for (let i = 0; i < rows; ++i) {
     squares[i] = new Array(columns);
@@ -17,6 +18,16 @@ function closeModal() {
     modal.style.display="none";
     Tone.start();
 }
+
+document.addEventListener("keypress", () => {
+    if (running) {    
+        console.log("stopping");
+        running = 0;
+    } else { 
+        console.log("starting");
+        running = 1;
+    } 
+})
 
 window.onload = () => {
     // Create grid of squares
@@ -32,16 +43,16 @@ window.onload = () => {
             grid.appendChild(squareHtml);
 
             let newSquare = {
-                square: squareHtml,
+                html: squareHtml,
                 alive: 0
             };
 
             squareHtml.addEventListener("click", () => {
-                if (newSquare.square.style.backgroundColor == "green") { 
-                    newSquare.square.style.backgroundColor = "blue";
+                if (newSquare.html.style.backgroundColor == "green") { 
+                    newSquare.html.style.backgroundColor = "blue";
                     newSquare.alive = 0;
                 } else {
-                    newSquare.square.style.backgroundColor = "green";
+                    newSquare.html.style.backgroundColor = "green";
                     newSquare.alive = 1;
                 } 
                 console.log("toggling square " + divId);
@@ -72,7 +83,6 @@ function advanceClock () {
             */
             
             // Top row 
-            
             if (i == 0) {
                 // Top left corner
                 if (j == 0) {
@@ -87,53 +97,125 @@ function advanceClock () {
                     console.log(squares[i+1][j + 1].alive);
                     console.log("neighborCount: " + neighborCount); 
                 }
-                /*
+                // Top right corner
                 else if (j = columns - 1) {
+                    if (squares[i+1][j].alive == 1)
+                        neighborCount++;
+                    if (squares[i][j-1].alive == 1)
+                        neighborCount++; 
+                    if (squares[i+1][j-1].alive == 1)
+                        neighborCount++;
+                }
+                // Other squares
+                else {
+                    if (squares[i][j-1].alive == 1)
+                        neighborCount++;
+                    if (squares[i][j+1].alive == 1)
+                        neighborCount++;
+                    if (squares[i+1][j-1].alive == 1)
+                        neighborCount++; 
+                    if (squares[i+1][j+1].alive == 1)
+                        neighborCount++;
+                }     
+            } 
+            
+            // Bottom row
+            else if (i == rows - 1) {
+                // Bottom left corner
+                if (j == 0) {
+                    if (squares[i][j + 1].alive == 1)
+                        neighborCount++;
+                    if (squares[i-1][j].alive == 1)
+                        neighborCount++; 
+                    if (squares[i-1][j+1].alive == 1)
+                        neighborCount++;  
+                    console.log(squares[i][j + 1].alive);
+                    console.log(squares[i-1][j].alive);
+                    console.log(squares[i-1][j + 1].alive);
+                    console.log("neighborCount: " + neighborCount); 
+                }
 
+                // Bottom right corner
+                else if (j = columns - 1) {
+                    if (squares[i-1][j].alive == 1)
+                        neighborCount++;
+                    if (squares[i][j-1].alive == 1)
+                        neighborCount++; 
+                    if (squares[i-1][j-1].alive == 1)
+                        neighborCount++;
+                }
+
+                // Other squares
+                else {
+                    if (squares[i][j-1].alive == 1)
+                        neighborCount++;
+                    if (squares[i][j+1].alive == 1)
+                        neighborCount++;
+                    if (squares[i+1][j-1].alive == 1)
+                        neighborCount++; 
+                    if (squares[i+1][j+1].alive == 1)
+                        neighborCount++;
+                }
+            } 
+            
+            // Middle rows
+            else {
+                if (j == 0) {
+                    if (squares[i][j+1].alive == 1)
+                        neighborCount++;
+                    if (squares[i-1][j].alive == 1)
+                        neighborCount++;
+                    if (squares[i-1][j+1].alive == 1)
+                        neighborCount++;
+                    if (squares[i+1][j].alive == 1)
+                        neighborCount++;
+                    if (squares[i+1][j+1].alive == 1)
+                        neighborCount++; 
+                }
+                else if (j == columns - 1) {
+                    if (squares[i][j-1].alive == 1)
+                        neighborCount++;
+                    if (squares[i-1][j].alive == 1)
+                        neighborCount++;
+                    if (squares[i-1][j-1].alive == 1)
+                        neighborCount++;
+                    if (squares[i+1][j].alive == 1)
+                        neighborCount++;
+                    if (squares[i+1][j-1].alive == 1)
+                        neighborCount++;
                 }
                 else {
-
-                } 
-                */
+                    if (squares[i][j-1].alive == 1)
+                        neighborCount++;
+                    if (squares[i][j+1].alive == 1)
+                        neighborCount++;
+                    if (squares[i-1][j].alive == 1)
+                        neighborCount++;
+                    if (squares[i-1][j-1].alive == 1)
+                        neighborCount++;
+                    if (squares[i-1][j+1].alive == 1)
+                        neighborCount++;
+                    if (squares[i+1][j-1].alive == 1)
+                        neighborCount++;
+                    if (squares[i+1][j].alive == 1)
+                        neighborCount++;
+                    if (squares[i+1][j+1].alive == 1)
+                        neighborCount++;
+                }
             }
-            
-            
 
-            /*
-            if (squares[i-1][j] != undefined && squares[i-1][j].data-alive == "1")
-                neighborCount++;
-            if (squares[i-1][j+1] != undefined && squares[i-1][j+1].data-alive == "1")
-                neighborCount++;
-            if (squares[i+1][j] != undefined && squares[i+1][j].data-alive == "1")
-                neighborCount++;
-            if (squares[i+1][j-1] != undefined && squares[i+1][j-1].data-alive == "1")
-                neighborCount++;
-            if (squares[i+1][j+1] != undefined && squares[i+1][j+1].data-alive == "1")
-                neighborCount++;
-            if (squares[i][j-1] != undefined && squares[i][j-1].data-alive == "1")
-                neighborCount++;
-            if (squares[i-1][j-1] != undefined && squares[i-1][j-1].data-alive == "1")
-                neighborCount++;
-            if (squares[i+1][j-1] != undefined && squares[i+1][j-1].data-alive == "1")
-                neighborCount++;
-            */
-
-            /*
-            if (squares[i+1][j].data-alive == "1")
-                neighborCount++;
-            if (squares[i][j-1].data-alive == "1")
-                neighborCount++;
-            if (squares[i][j+1].data-alive == "1")
-                neighborCount++;
-            if (squares[i-1][j-1].data-alive == "1")
-                neighborCount++;    
-            if (squares[i+1][j-1].data-alive == "1")
-                neighborCount++;
-            if (squares[i+1][j+1].data-alive == "1")
-                neighborCount++;
-            */
+            // The algorithm for Conway's Game of Life
+            if (neighborCount < 2 || neighborCount > 3) {
+                squares[i][j].alive = 0;
+                squares[i][j].html.style.backgroundColor = "blue";
+            }
+            if (neighborCount == 3) {
+                squares[i][j].alive = 1;
+                squares[i][j].html.style.backgroundColor = "green";
+            }
 
             // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
+            neighborCount = 0;
         }
     }
 }
