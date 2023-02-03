@@ -64,7 +64,7 @@ window.onload = () => {
             
             squares[i][j] = newSquare;
 
-            start();
+            // start();
         }
     }
 }
@@ -113,7 +113,7 @@ function advanceClock () {
                         */
                     }
                     // Top right corner
-                    else if (j = columns - 1) {
+                    else if (j == columns - 1) {
                         if (squares[i+1][j].alive == 1)
                             neighborCount++;
                         if (squares[i][j-1].alive == 1)
@@ -151,7 +151,7 @@ function advanceClock () {
                     }
 
                     // Bottom right corner
-                    else if (j = columns - 1) {
+                    else if (j == columns - 1) {
                         if (squares[i-1][j].alive == 1)
                             neighborCount++;
                         if (squares[i][j-1].alive == 1)
