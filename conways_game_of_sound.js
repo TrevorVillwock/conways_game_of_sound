@@ -70,6 +70,7 @@ window.onload = () => {
             })
             
             currentSquares[i][j] = newSquare;
+            nextSquares[i][j] = newSquare;
         }
     }
 }
@@ -237,16 +238,18 @@ function advanceClock () {
 
             // The algorithm for Conway's Game of Life
             if (neighborCount < 2 || neighborCount > 3) {
-                currentSquares[i][j].alive = 0;
-                currentSquares[i][j].html.style.backgroundColor = "blue";
+                nextSquares[i][j].alive = 0;
+                nextSquares[i][j].html.style.backgroundColor = "blue";
             }
             if (neighborCount == 3) {
-                currentSquares[i][j].alive = 1;
-                currentSquares[i][j].html.style.backgroundColor = "green";
+                nextSquares[i][j].alive = 1;
+                nextSquares[i][j].html.style.backgroundColor = "green";
             }
 
             // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
             neighborCount = 0;
         }
     }
+
+    currentSquares = nextSquares;
 }
