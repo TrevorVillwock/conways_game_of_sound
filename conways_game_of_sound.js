@@ -169,6 +169,8 @@ function advanceClock () {
                         neighborCount++; 
                     if (currentSquares[i+1][j+1].alive == 1)
                         neighborCount++;
+                    if (currentSquares[i+1][j].alive == 1)
+                        neighborCount++;
                 }     
             } 
             
@@ -207,6 +209,8 @@ function advanceClock () {
                     if (currentSquares[i-1][j-1].alive == 1)
                         neighborCount++; 
                     if (currentSquares[i-1][j+1].alive == 1)
+                        neighborCount++;
+                    if (currentSquares[i-1][j].alive == 1)
                         neighborCount++;
                 }
             } 
