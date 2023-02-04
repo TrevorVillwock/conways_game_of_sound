@@ -59,7 +59,7 @@ window.onload = () => {
             let squareHtml = document.createElement("div");
             let divId = `r${i}c${j}`;
             squareHtml.id = divId;
-            squareHtml.style.backgroundColor = "blue"
+            squareHtml.style.backgroundColor = "blue";
             grid.appendChild(squareHtml);
             let pitchName = pitches[j % pitches.length] + octave;
 
@@ -262,7 +262,7 @@ function advanceClock () {
             }
 
             if (currentSquares[i][j].alive) {
-                polySynth.triggerAttackRelease(currentSquares[i][j].pitch, 0.1);
+                polySynth.triggerAttackRelease(currentSquares[i][j].pitch, 1.0);
             }
 
             // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);

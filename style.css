@@ -3,61 +3,22 @@ html {
   flex: 1 1 auto;
 }
 
-/* The class selector below provides the basic attributes that every square shares */
-.square {
-  position: absolute;
-  height: 250px;
-  width: 250px;
+h {
+  font-size: 50px;
 }
 
-/* The id selectors below give each square its unique color and position */ 
-
-#square-1 {
-    background-color: rgb(81, 79, 219);
-    top: 0px;
-    left: 0px;
+#row {
+  display: flex;
+  flex-direction: row;
 }
 
-#square-2 {
-    background-color: rgb(102, 100, 215);
-    top: 0px;
-    left: 250px;
-}
-
-#square-3 {
-    background-color: rgb(136, 156, 223);
-    top: 0px;
-    left: 500px;
-}
-
-#square-4 {
-    background-color: rgb(137, 214, 242);
-    top: 0px;
-    left: 750px;
-}
-
-#square-5 {
-  background-color: rgb(137, 214, 242);
-  top: 250px;
-  left: 0px;
-}
-
-#square-6 {
-  background-color: rgb(136, 156, 223);
-  top: 250px;
-  left: 250px;
-}
-
-#square-7 {
-  background-color: rgb(102, 100, 215);
-  top: 250px;
-  left: 500px;
-}
-
-#square-8 {
-  background-color: rgb(81, 79, 219);
-  top: 250px;
-  left: 750px;
+#column {
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-items: flex-start;
+  padding: 5px 5px 5px 5px;
 }
 
 #controls {
@@ -124,8 +85,8 @@ explanation of auto-fill: https://www.w3.org/TR/css3-grid-layout/#fr-unit
   display: grid;
   /* grid-template-columns: repeat(auto-fill, minmax(25ch, 1fr)); */
   /* grid-template-rows: repeat(autofill, minmax(25ch, 1fr)); */
-  grid-template-columns: repeat(10, 200px);
-  grid-template-rows: repeat(10, 200px);
+  grid-template-columns: repeat(10, 100px);
+  grid-template-rows: repeat(10, 100px);
   row-gap: 4px;
   column-gap: 4px;
 }
@@ -133,6 +94,10 @@ explanation of auto-fill: https://www.w3.org/TR/css3-grid-layout/#fr-unit
 #grid div {
   background-color: black;
   aspect-ratio: 1;
+}
+
+#description {
+  font-size: 20px;  
 }
 
 /* uncomment the CSS below to add a red border to every html object */
