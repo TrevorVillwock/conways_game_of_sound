@@ -4,6 +4,7 @@ let columns = 10;
 let neighborCount = 0;
 let running = 0; // Boolean for whether clock is running 
 let clockID; // Id returned by setInterval to use for stopping clock
+let tempo = 1000; // milliseconds per clock tick
 
 // Create a 2D Array to represent the current state of the grid for conway's game of life
 let currentSquares = Array(rows);
@@ -22,7 +23,7 @@ let pitches = ["G", "A", "B", "D", "E"];
 let octaves = 5;
 
 // Create synthesizer
-let polySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+let polySynth = new Tone.PolySynth(Tone.Synth, {maxPolyphony: 200}).toDestination();
 
 function closeModal() {
     let modal = document.getElementById("popup");
@@ -89,7 +90,7 @@ window.onload = () => {
 
 function start(){
     running = 1;
-    clockID = setInterval(advanceClock, 1000);
+    clockID = setInterval(advanceClock, tempo);
 };
 
 function stop(){
