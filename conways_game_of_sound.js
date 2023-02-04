@@ -1,4 +1,4 @@
-let grid;
+let grid; // will eventually hold html element to which all grid squares are attached as children
 let rows = 10;
 let columns = 10;
 let neighborCount = 0;
@@ -12,11 +12,17 @@ for (let i = 0; i < rows; ++i) {
     currentSquares[i] = new Array(columns);
 }
 
-// Create a 2D Array to represent the current state of the grid for conway's game of life
+// Create a 2D Array to represent the state of the grid after the next clock tick
 let nextSquares = Array(rows);
 for (let i = 0; i < rows; ++i) {
     nextSquares[i] = new Array(columns);
 }
+
+/* We need two separate arrays because each square should change based on its present
+/ surrounding conditions, not those after the next clock tick when the cells around it
+/ may have changed. For example, cells in the second row shouldn't be affected by cells
+/ in the first row becoming alive or dying in the same pass of the for loops through the
+/ grid. */
 
 // Specify frequencies for squares
 let pitches = ["G", "A", "B", "D", "E"];
@@ -207,6 +213,7 @@ function advanceClock () {
             
             // Middle rows
             else {
+                // First square
                 if (j == 0) {
                     if (currentSquares[i][j+1].alive == 1)
                         neighborCount++;
@@ -219,6 +226,7 @@ function advanceClock () {
                     if (currentSquares[i+1][j+1].alive == 1)
                         neighborCount++; 
                 }
+                // Last square
                 else if (j == columns - 1) {
                     if (currentSquares[i][j-1].alive == 1)
                         neighborCount++;
@@ -231,6 +239,7 @@ function advanceClock () {
                     if (currentSquares[i+1][j-1].alive == 1)
                         neighborCount++;
                 }
+                // Other squares
                 else {
                     if (currentSquares[i][j-1].alive == 1)
                         neighborCount++;
@@ -256,7 +265,7 @@ function advanceClock () {
                 nextSquares[i][j].alive = 0;
                 nextSquares[i][j].html.style.backgroundColor = "blue";
             }
-            if (neighborCount == 3) {
+            if (neighborCount == 3 && !nextSquares[i][j].alive) {
                 nextSquares[i][j].alive = 1;
                 nextSquares[i][j].html.style.backgroundColor = "green";
             }
