@@ -22,7 +22,6 @@ let pitches = ["G", "A", "B", "D", "E"];
 let octaves = 5;
 
 // Create synthesizer
-//let synth = new Tone.Synth({volume: 0.5});
 let polySynth = new Tone.PolySynth(Tone.Synth).toDestination();
 
 function closeModal() {
@@ -54,17 +53,21 @@ window.onload = () => {
     console.log(grid);
 
     for (let i = 0; i < rows; ++i) {
+        let octave = 2 + i % octaves;
         for (let j = 0; j < columns; ++j) {
             let squareHtml = document.createElement("div");
             let divId = `r${i}c${j}`;
             squareHtml.id = divId;
             squareHtml.style.backgroundColor = "blue"
             grid.appendChild(squareHtml);
+            let pitchName = pitches[j % pitches.length] + octave;
 
+            console.log(pitchName);
+            
             let newSquare = {
                 html: squareHtml,
                 alive: 0,
-                pitch: "G4"
+                pitch: pitchName
             };
 
             squareHtml.addEventListener("click", () => {
@@ -194,9 +197,9 @@ function advanceClock () {
                         neighborCount++;
                     if (currentSquares[i][j+1].alive == 1)
                         neighborCount++;
-                    if (currentSquares[i+1][j-1].alive == 1)
+                    if (currentSquares[i-1][j-1].alive == 1)
                         neighborCount++; 
-                    if (currentSquares[i+1][j+1].alive == 1)
+                    if (currentSquares[i-1][j+1].alive == 1)
                         neighborCount++;
                 }
             } 
