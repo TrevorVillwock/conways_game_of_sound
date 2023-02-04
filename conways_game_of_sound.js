@@ -17,6 +17,14 @@ for (let i = 0; i < rows; ++i) {
     nextSquares[i] = new Array(columns);
 }
 
+// Specify frequencies for squares
+let pitches = ["G", "A", "B", "D", "E"];
+let octaves = 5;
+
+// Create synthesizer
+//let synth = new Tone.Synth({volume: 0.5});
+let polySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+
 function closeModal() {
     let modal = document.getElementById("popup");
     /* console.log("modal:")
@@ -55,7 +63,8 @@ window.onload = () => {
 
             let newSquare = {
                 html: squareHtml,
-                alive: 0
+                alive: 0,
+                pitch: "G4"
             };
 
             squareHtml.addEventListener("click", () => {
@@ -94,23 +103,25 @@ function advanceClock () {
             /* The outer if statements account for the squares along the border
             / that don't have all 8 neighbors. Categories of squares:
             
-            All neighbors
+            Edge and corner cases:
             Top border: no upper neighbors, i = 0
             Right border: no right neighbors, j = columns - 1
             Bottom border: no bottom neighbors, i = rows - 1
             Left border: no left neighbors, j = 0
             Corners: only three neighbors 
 
-            loop through squares
-            and examine neighbors:
-            r-1, c
-            r+1, c
-            r, c-1
-            r, c+1
-            r-1, c-1
-            r-1, c+1
-            r+1, c-1
-            r+1, c+1
+            The rest of the squares have 8 neighbors to examine:
+            i-1, j
+            i+1, j
+            i, j-1
+            i, j+1
+            i-1, j-1
+            i-1, j+1
+            i+1, j-1
+            i+1, j+1
+
+            Edge and corner cases are general concepts in programming outside of this program with literal edges and corners.
+            An edge case is when one parameter is at an extreme, and a corner case is when one or more parameters are at extremes at the same time.
             */
             
             // Top row 
@@ -244,6 +255,10 @@ function advanceClock () {
             if (neighborCount == 3) {
                 nextSquares[i][j].alive = 1;
                 nextSquares[i][j].html.style.backgroundColor = "green";
+            }
+
+            if (currentSquares[i][j].alive) {
+                polySynth.triggerAttackRelease(currentSquares[i][j].pitch, 0.1);
             }
 
             // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
