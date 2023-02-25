@@ -68,13 +68,14 @@ window.onload = () => {
             squareHtml.style.backgroundColor = "blue";
             grid.appendChild(squareHtml);
             let pitchName = pitches[j % pitches.length] + octave;
-
+            let synth = new Tone.Synth().toDestination();
             console.log(pitchName);
             
             let newSquare = {
                 html: squareHtml,
                 alive: 0,
-                pitch: pitchName
+                pitch: pitchName,
+                instrument: synth
             };
 
             squareHtml.addEventListener("click", () => {
@@ -138,7 +139,7 @@ function advanceClock () {
             }
 
             if (currentSquares[i][j].alive) {
-                polySynth.triggerAttackRelease(currentSquares[i][j].pitch, 1.0);
+                currentSquares[i][j].instrument.triggerAttackRelease(currentSquares[i][j].pitch, 1.0);
             }
 
             // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
