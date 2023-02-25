@@ -28,7 +28,7 @@ for (let i = 0; i < rows; ++i) {
 let pitches = ["G", "A", "B", "D", "E"];
 let octaves = 5;
 
-let reverb = new Tone.Reverb({decay: 5}).toDestination();
+let reverb = new Tone.Reverb({decay: 10}).toDestination();
 
 let envelope = new Tone.AmplitudeEnvelope({
     attack: 0.25,
@@ -77,7 +77,7 @@ window.onload = () => {
             
             console.log(pitchName);
 
-            // volume is in decibels
+            // Volume is in decibels
             let synth = new Tone.Synth({volume: -30}).connect(envelope);
             
             let newSquare = {
@@ -116,6 +116,7 @@ function stop(){
 
 function advanceClock () {
 
+    // The 0.5 here means that the envelope will trigger the release 0.5 seconds after the attack
     envelope.triggerAttackRelease("0.5");
 
     for (let i = 0; i < rows; ++i) {
