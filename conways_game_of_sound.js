@@ -29,7 +29,7 @@ let pitches = ["G", "A", "B", "D", "E"];
 let octaves = 5;
 
 // Create synthesizer
-let polySynth = new Tone.PolySynth(Tone.Synth, {maxPolyphony: 200}).toDestination();
+const polySynth = new Tone.PolySynth(Tone.Synth, {maxPolyphony: 200}).toDestination();
 
 function closeModal() {
     let modal = document.getElementById("popup");
@@ -109,160 +109,23 @@ function advanceClock () {
     for (let i = 0; i < rows; ++i) {
         for (let j = 0; j < columns; ++j) {
             neighborCount = 0;
-
-            /* The outer if statements account for the squares along the border
-            / that don't have all 8 neighbors. Categories of squares:
             
-            Edge and corner cases:
-            Top border: no upper neighbors, i = 0
-            Right border: no right neighbors, j = columns - 1
-            Bottom border: no bottom neighbors, i = rows - 1
-            Left border: no left neighbors, j = 0
-            Corners: only three neighbors 
-
-            The rest of the squares have 8 neighbors to examine:
-            i-1, j
-            i+1, j
-            i, j-1
-            i, j+1
-            i-1, j-1
-            i-1, j+1
-            i+1, j-1
-            i+1, j+1
-
-            Edge and corner cases are general concepts in programming outside of this program with literal edges and corners.
-            An edge case is when one parameter is at an extreme, and a corner case is when one or more parameters are at extremes at the same time.
-            */
-            
-            // Top row 
-            if (i == 0) {
-                // Top left corner
-                if (j == 0) {
-                    if (currentSquares[i][j + 1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j].alive == 1)
-                        neighborCount++; 
-                    if (currentSquares[i+1][j+1].alive == 1)
-                        neighborCount++;  
-                    /*console.log(currentSquares[i][j + 1].alive);
-                    console.log(currentSquares[i+1][j].alive);
-                    console.log(currentSquares[i+1][j + 1].alive);
-                    console.log("neighborCount: " + neighborCount);
-                    */
-                }
-                // Top right corner
-                else if (j == columns - 1) {
-                    if (currentSquares[i+1][j].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i][j-1].alive == 1)
-                        neighborCount++; 
-                    if (currentSquares[i+1][j-1].alive == 1)
-                        neighborCount++;
-                }
-                // Other squares
-                else {
-                    if (currentSquares[i][j-1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i][j+1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j-1].alive == 1)
-                        neighborCount++; 
-                    if (currentSquares[i+1][j+1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j].alive == 1)
-                        neighborCount++;
-                }     
-            } 
-            
-            // Bottom row
-            else if (i == rows - 1) {
-                // Bottom left corner
-                if (j == 0) {
-                    if (currentSquares[i][j + 1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j].alive == 1)
-                        neighborCount++; 
-                    if (currentSquares[i-1][j+1].alive == 1)
-                        neighborCount++;  
-                    /*console.log(currentSquares[i][j + 1].alive);
-                    console.log(currentSquares[i-1][j].alive);
-                    console.log(currentSquares[i-1][j + 1].alive);
-                    console.log("neighborCount: " + neighborCount);*/ 
-                }
-
-                // Bottom right corner
-                else if (j == columns - 1) {
-                    if (currentSquares[i-1][j].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i][j-1].alive == 1)
-                        neighborCount++; 
-                    if (currentSquares[i-1][j-1].alive == 1)
-                        neighborCount++;
-                }
-
-                // Other squares
-                else {
-                    if (currentSquares[i][j-1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i][j+1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j-1].alive == 1)
-                        neighborCount++; 
-                    if (currentSquares[i-1][j+1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j].alive == 1)
-                        neighborCount++;
-                }
-            } 
-            
-            // Middle rows
-            else {
-                // First square
-                if (j == 0) {
-                    if (currentSquares[i][j+1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j+1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j+1].alive == 1)
-                        neighborCount++; 
-                }
-                // Last square
-                else if (j == columns - 1) {
-                    if (currentSquares[i][j-1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j-1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j-1].alive == 1)
-                        neighborCount++;
-                }
-                // Other squares
-                else {
-                    if (currentSquares[i][j-1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i][j+1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j-1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i-1][j+1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j-1].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j].alive == 1)
-                        neighborCount++;
-                    if (currentSquares[i+1][j+1].alive == 1)
-                        neighborCount++;
-                }
-            }
+            if (j > 0 && currentSquares[i][j-1].alive == 1)
+                neighborCount++;
+            if (j < columns - 1 && currentSquares[i][j+1].alive == 1)
+                neighborCount++;
+            if (i > 0 && currentSquares[i-1][j].alive == 1)
+                neighborCount++;
+            if (i > 0 && j > 0 && currentSquares[i-1][j-1].alive == 1)
+                neighborCount++;
+            if (i > 0 && j < columns - 1 && currentSquares[i-1][j+1].alive == 1)
+                neighborCount++;
+            if (i < rows - 1 && j > 0 && currentSquares[i+1][j-1].alive == 1)
+                neighborCount++;
+            if (i < rows - 1 && currentSquares[i+1][j].alive == 1)
+                neighborCount++;
+            if (i < rows - 1 && j < columns - 1 && currentSquares[i+1][j+1].alive == 1)
+                neighborCount++;
 
             // The algorithm for Conway's Game of Life
             if (neighborCount < 2 || neighborCount > 3) {
