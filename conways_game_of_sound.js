@@ -28,8 +28,12 @@ for (let i = 0; i < rows; ++i) {
 let pitches = ["G", "A", "B", "D", "E"];
 let octaves = 5;
 
-// Create synthesizer
-const polySynth = new Tone.PolySynth(Tone.Synth, {maxPolyphony: 200}).toDestination();
+let envelope = new Tone.AmplitudeEnvelope({
+    attack: 0.25,
+    decay: 0,
+    sustain: 0.25,
+    release: 0.25
+}).toDestination();
 
 function closeModal() {
     let modal = document.getElementById("popup");
@@ -68,14 +72,17 @@ window.onload = () => {
             squareHtml.style.backgroundColor = "blue";
             grid.appendChild(squareHtml);
             let pitchName = pitches[j % pitches.length] + octave;
-            let synth = new Tone.Synth().toDestination();
+            
             console.log(pitchName);
+
+            let synth = new Tone.Synth().connect(envelope);
             
             let newSquare = {
                 html: squareHtml,
                 alive: 0,
                 pitch: pitchName,
-                instrument: synth
+                instrument: synth,
+                env: envelope
             };
 
             squareHtml.addEventListener("click", () => {
@@ -106,6 +113,8 @@ function stop(){
 }
 
 function advanceClock () {
+
+    envelope.triggerAttackRelease("0.25");
 
     for (let i = 0; i < rows; ++i) {
         for (let j = 0; j < columns; ++j) {
@@ -140,6 +149,7 @@ function advanceClock () {
 
             if (currentSquares[i][j].alive) {
                 currentSquares[i][j].instrument.triggerAttackRelease(currentSquares[i][j].pitch, 1.0);
+                //currentSquares[i][j].env.triggerAttackRelease();
             }
 
             // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
