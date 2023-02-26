@@ -1,21 +1,20 @@
 let grid; // will eventually hold html element to which all grid squares are attached as children
-let rows = 10;
-let columns = 10;
-let neighborCount = 0;
-let running = 0; // Boolean for whether clock is running 
+let ROWS = 10;
+let COLUMNS = 10;
+let running = false; // Boolean for whether clock is running 
 let clockID; // Id returned by setInterval to use for stopping clock
-let tempo = 1000; // milliseconds per clock tick
+let TEMPO = 1000; // milliseconds per clock tick
 
 // Create a 2D Array to represent the current state of the grid for conway's game of life
-let currentSquares = Array(rows);
-for (let i = 0; i < rows; ++i) {
-    currentSquares[i] = new Array(columns);
+let currentSquares = Array(ROWS);
+for (let i = 0; i < ROWS; ++i) {
+    currentSquares[i] = new Array(COLUMNS);
 }
 
 // Create a 2D Array to represent the state of the grid after the next clock tick
-let nextSquares = Array(rows);
-for (let i = 0; i < rows; ++i) {
-    nextSquares[i] = new Array(columns);
+let nextSquares = Array(ROWS);
+for (let i = 0; i < ROWS; ++i) {
+    nextSquares[i] = new Array(COLUMNS);
 }
 
 /* We need two separate arrays because each square should change based on its present
@@ -47,14 +46,16 @@ function closeModal() {
 }
 
 document.addEventListener("keypress", (event) => {
-    console.log(event.code);
-    if (event.code == "Space") {
+  console.log(event.code);
+  if (event.code == "Space") {
+      // by default, space scrolls down. this prevents this
+      event.preventDefault();
         if (running) {    
             console.log("stopping");
             stop();
         } else { 
             console.log("starting");
-            running = 1;
+            running = true;
             start();
         } 
     }
@@ -65,9 +66,9 @@ window.onload = () => {
     grid = document.getElementById("grid");
     console.log(grid);
 
-    for (let i = 0; i < rows; ++i) {
+    for (let i = 0; i < COLUMNS; ++i) {
         let octave = 2 + i % octaves;
-        for (let j = 0; j < columns; ++j) {
+        for (let j = 0; j < ROWS; ++j) {
             let squareHtml = document.createElement("div");
             let divId = `r${i}c${j}`;
             squareHtml.id = divId;
@@ -82,7 +83,7 @@ window.onload = () => {
             
             let newSquare = {
                 html: squareHtml,
-                alive: 0,
+                alive: false,
                 pitch: pitchName,
                 instrument: synth,
             };
@@ -90,10 +91,10 @@ window.onload = () => {
             squareHtml.addEventListener("click", () => {
                 if (newSquare.html.style.backgroundColor == "green") { 
                     newSquare.html.style.backgroundColor = "blue";
-                    newSquare.alive = 0;
+                    newSquare.alive = false;
                 } else {
                     newSquare.html.style.backgroundColor = "green";
-                    newSquare.alive = 1;
+                    newSquare.alive = true;
                 } 
                 console.log("toggling square " + divId);
             })
@@ -105,48 +106,46 @@ window.onload = () => {
 }
 
 function start(){
-    running = 1;
-    clockID = setInterval(advanceClock, tempo);
+    running = true;
+    clockID = setInterval(advanceClock, TEMPO);
 };
 
 function stop(){
-    running = 0;
+    running = false;
     clearInterval(clockID);
 }
 
-function advanceClock () {
-
+function advanceClock() {
     // The 0.5 here means that the envelope will trigger the release 0.5 seconds after the attack
     envelope.triggerAttackRelease("0.5");
-
-    for (let i = 0; i < rows; ++i) {
-        for (let j = 0; j < columns; ++j) {
-            neighborCount = 0;
+    for (let i = 0; i < ROWS; ++i) {
+        for (let j = 0; j < COLUMNS; ++j) {
+            let neighborCount = 0;
             
-            if (j > 0 && currentSquares[i][j-1].alive == 1)
+            if (j > 0 && currentSquares[i][j-1].alive)
                 neighborCount++;
-            if (j < columns - 1 && currentSquares[i][j+1].alive == 1)
+            if (j < COLUMNS - 1 && currentSquares[i][j+1].alive)
                 neighborCount++;
-            if (i > 0 && currentSquares[i-1][j].alive == 1)
+            if (i > 0 && currentSquares[i-1][j].alive)
                 neighborCount++;
-            if (i > 0 && j > 0 && currentSquares[i-1][j-1].alive == 1)
+            if (i > 0 && j > 0 && currentSquares[i-1][j-1].alive)
                 neighborCount++;
-            if (i > 0 && j < columns - 1 && currentSquares[i-1][j+1].alive == 1)
+            if (i > 0 && j < COLUMNS - 1 && currentSquares[i-1][j+1].alive)
                 neighborCount++;
-            if (i < rows - 1 && j > 0 && currentSquares[i+1][j-1].alive == 1)
+            if (i < ROWS - 1 && j > 0 && currentSquares[i+1][j-1].alive)
                 neighborCount++;
-            if (i < rows - 1 && currentSquares[i+1][j].alive == 1)
+            if (i < ROWS - 1 && currentSquares[i+1][j].alive)
                 neighborCount++;
-            if (i < rows - 1 && j < columns - 1 && currentSquares[i+1][j+1].alive == 1)
+            if (i < ROWS - 1 && j < COLUMNS - 1 && currentSquares[i+1][j+1].alive)
                 neighborCount++;
 
             // The algorithm for Conway's Game of Life
             if (neighborCount < 2 || neighborCount > 3) {
-                nextSquares[i][j].alive = 0;
+                nextSquares[i][j].alive = false;
                 nextSquares[i][j].html.style.backgroundColor = "blue";
             }
-            if (neighborCount == 3 && !nextSquares[i][j].alive) {
-                nextSquares[i][j].alive = 1;
+            if (neighborCount == 3 && !currentSquares[i][j].alive) {
+                nextSquares[i][j].alive = true;
                 nextSquares[i][j].html.style.backgroundColor = "green";
             }
 
@@ -155,7 +154,6 @@ function advanceClock () {
             }
 
             // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
-            neighborCount = 0;
         }
     }
 
