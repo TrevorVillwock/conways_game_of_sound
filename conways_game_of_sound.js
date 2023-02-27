@@ -81,26 +81,33 @@ window.onload = () => {
             // Volume is in decibels
             let synth = new Tone.Synth({volume: -30}).connect(envelope);
             
-            let newSquare = {
+            let newCurrentSquare = {
                 html: squareHtml,
                 alive: false,
                 pitch: pitchName,
                 instrument: synth,
             };
 
+            let newNextSquare = {
+                color: "blue",
+                alive: false,
+                pitch: pitchName,
+                instrument: synth,
+            };
+
             squareHtml.addEventListener("click", () => {
-                if (newSquare.html.style.backgroundColor == "green") { 
-                    newSquare.html.style.backgroundColor = "blue";
-                    newSquare.alive = false;
+                if (newCurrentSquare.html.style.backgroundColor == "green") { 
+                    newCurrentSquare.html.style.backgroundColor = "blue";
+                    newCurrentSquare.alive = false;
                 } else {
-                    newSquare.html.style.backgroundColor = "green";
-                    newSquare.alive = true;
+                    newCurrentSquare.html.style.backgroundColor = "green";
+                    newCurrentSquare.alive = true;
                 } 
                 console.log("toggling square " + divId);
             })
             
-            currentSquares[i][j] = newSquare;
-            nextSquares[i][j] = newSquare;
+            currentSquares[i][j] = newCurrentSquare;
+            nextSquares[i][j] = newNextSquare;
         }
     }
 }
@@ -142,20 +149,35 @@ function advanceClock() {
             // The algorithm for Conway's Game of Life
             if (neighborCount < 2 || neighborCount > 3) {
                 nextSquares[i][j].alive = false;
-                nextSquares[i][j].html.style.backgroundColor = "blue";
+                nextSquares[i][j].color = "blue";
             }
-            if (neighborCount == 3 && !currentSquares[i][j].alive) {
+
+            if (neighborCount == 2 && currentSquares[i][j].alive) {
                 nextSquares[i][j].alive = true;
-                nextSquares[i][j].html.style.backgroundColor = "green";
+                nextSquares[i][j].color = "green";
             }
+
+
+            if (neighborCount == 3) {
+                nextSquares[i][j].alive = true;
+                nextSquares[i][j].color = "green";
+            }
+
 
             if (currentSquares[i][j].alive) {
                 currentSquares[i][j].instrument.triggerAttackRelease(currentSquares[i][j].pitch, 1.0);
             }
 
-            // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
+            console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
         }
     }
 
-    currentSquares = nextSquares;
+    // currentSquares = nextSquares;
+
+    for (let i = 0; i < COLUMNS; ++i) {
+        for (let j = 0; j < ROWS; ++j) {
+            currentSquares[i][j].alive = nextSquares[i][j].alive;
+            currentSquares[i][j].html.style.backgroundColor = nextSquares[i][j].color;
+        }
+    }
 }
