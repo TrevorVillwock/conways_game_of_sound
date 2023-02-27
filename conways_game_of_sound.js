@@ -38,9 +38,6 @@ let envelope = new Tone.AmplitudeEnvelope({
 
 function closeModal() {
     let modal = document.getElementById("popup");
-    /* console.log("modal:")
-    console.log(modal)
-    console.log("closing modal"); */
     modal.style.display="none";
     Tone.start();
 }
@@ -157,22 +154,18 @@ function advanceClock() {
                 nextSquares[i][j].color = "green";
             }
 
-
             if (neighborCount == 3) {
                 nextSquares[i][j].alive = true;
                 nextSquares[i][j].color = "green";
             }
 
-
             if (currentSquares[i][j].alive) {
                 currentSquares[i][j].instrument.triggerAttackRelease(currentSquares[i][j].pitch, 1.0);
             }
 
-            console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
+            // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
         }
     }
-
-    // currentSquares = nextSquares;
 
     for (let i = 0; i < COLUMNS; ++i) {
         for (let j = 0; j < ROWS; ++j) {
