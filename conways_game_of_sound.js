@@ -58,6 +58,17 @@ document.addEventListener("keypress", (event) => {
     }
 })
 
+function updateSquare(newCurrentSquare, divId) {
+  if (newCurrentSquare.html.style.backgroundColor == "green") { 
+    newCurrentSquare.html.style.backgroundColor = "blue";
+    newCurrentSquare.alive = false;
+  } else {
+      newCurrentSquare.html.style.backgroundColor = "green";
+      newCurrentSquare.alive = true;
+  } 
+  console.log("toggling square " + divId);
+}
+
 window.onload = () => {
     // Create grid of squares
     grid = document.getElementById("grid");
@@ -66,43 +77,41 @@ window.onload = () => {
     for (let i = 0; i < COLUMNS; ++i) {
         let octave = 2 + i % octaves;
         for (let j = 0; j < ROWS; ++j) {
-            let squareHtml = document.createElement("div");
-            let divId = `r${i}c${j}`;
+            const squareHtml = document.createElement("div");
+            const divId = `r${i}c${j}`;
             squareHtml.id = divId;
             squareHtml.style.backgroundColor = "blue";
             grid.appendChild(squareHtml);
-            let pitchName = pitches[j % pitches.length] + octave;
+            const pitchName = pitches[j % pitches.length] + octave;
             
             console.log(pitchName);
 
             // Volume is in decibels
-            let synth = new Tone.Synth({volume: -30}).connect(envelope);
+            const synth = new Tone.Synth({volume: -30}).connect(envelope);
             
-            let newCurrentSquare = {
+            const newCurrentSquare = {
                 html: squareHtml,
                 alive: false,
                 pitch: pitchName,
                 instrument: synth,
             };
 
-            let newNextSquare = {
+            const newNextSquare = {
                 color: "blue",
                 alive: false,
                 pitch: pitchName,
                 instrument: synth,
             };
 
-            squareHtml.addEventListener("click", () => {
-                if (newCurrentSquare.html.style.backgroundColor == "green") { 
-                    newCurrentSquare.html.style.backgroundColor = "blue";
-                    newCurrentSquare.alive = false;
-                } else {
-                    newCurrentSquare.html.style.backgroundColor = "green";
-                    newCurrentSquare.alive = true;
-                } 
-                console.log("toggling square " + divId);
-            })
-            
+            squareHtml.addEventListener("mousedown", (e) => {
+              updateSquare(newCurrentSquare, divId);
+            });
+            squareHtml.addEventListener("mouseover", (e) => {
+              if (e.buttons === 1) {
+                updateSquare(newCurrentSquare, divId);
+              }
+            });
+
             currentSquares[i][j] = newCurrentSquare;
             nextSquares[i][j] = newNextSquare;
         }
@@ -144,19 +153,12 @@ function advanceClock() {
                 neighborCount++;
 
             // The algorithm for Conway's Game of Life
-            if (neighborCount < 2 || neighborCount > 3) {
-                nextSquares[i][j].alive = false;
-                nextSquares[i][j].color = "blue";
-            }
-
-            if (neighborCount == 2 && currentSquares[i][j].alive) {
-                nextSquares[i][j].alive = true;
-                nextSquares[i][j].color = "green";
-            }
-
-            if (neighborCount == 3) {
-                nextSquares[i][j].alive = true;
-                nextSquares[i][j].color = "green";
+            if (neighborCount == 3 || neighborCount == 2 && currentSquares[i][j].alive) {
+              nextSquares[i][j].alive = true;
+              nextSquares[i][j].color = "green";
+            } else {
+              nextSquares[i][j].alive = false;
+              nextSquares[i][j].color = "blue";
             }
 
             if (currentSquares[i][j].alive) {
