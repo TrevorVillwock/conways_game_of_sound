@@ -100,6 +100,17 @@ explanation of auto-fill: https://www.w3.org/TR/css3-grid-layout/#fr-unit
   font-size: 20px;  
 }
 
+/*
+#save-preset-button {
+  height: 50px;
+  width: 200px;
+}
+*/
+.presets-controls {
+  height: 50px;
+  width: 200px;
+}
+
 /* uncomment the CSS below to add a red border to every html object */
 /* 
 * {

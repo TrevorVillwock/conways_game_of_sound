@@ -4,6 +4,14 @@ let COLUMNS = 10;
 let running = false; // Boolean for whether clock is running 
 let clockID; // Id returned by setInterval to use for stopping clock
 let TEMPO = 1000; // milliseconds per clock tick
+let presets = {}; // dictionary of supplied and user created presets which themselves are dictionaries
+let savePresetButton;
+let presetsMenu;
+let presetInput;
+
+/*
+Create dictionary recording state of each square
+*/
 
 // Create a 2D Array to represent the current state of the grid for conway's game of life
 let currentSquares = Array(ROWS);
@@ -20,7 +28,7 @@ for (let i = 0; i < ROWS; ++i) {
 /* We need two separate arrays because each square should change based on its present
 / surrounding conditions, not those after the next clock tick when the cells around it
 / may have changed. For example, cells in the second row shouldn't be affected by cells
-/ in the first row becoming alive or dying in the same pass of the for loops through the
+/ in the first row becoming alive or dead in the same pass of the for loops through the
 / grid. */
 
 // Specify frequencies for squares
@@ -52,7 +60,6 @@ document.addEventListener("keypress", (event) => {
             stop();
         } else { 
             console.log("starting");
-            running = true;
             start();
         } 
     }
@@ -74,6 +81,16 @@ window.onload = () => {
     grid = document.getElementById("grid");
     console.log(grid);
 
+    presetMenu = document.getElementById("preset-menu");
+    presetInput = document.getElementById("preset-input");
+
+    savePresetButton = document.getElementById("save-preset-button");
+    savePresetButton.addEventListener("click", () => {
+        let presetName = presetInput.value
+        console.log(`saving ${presetName}`);
+        savePreset(presetName);
+    });
+
     for (let i = 0; i < COLUMNS; ++i) {
         let octave = 2 + i % octaves;
         for (let j = 0; j < ROWS; ++j) {
@@ -93,14 +110,13 @@ window.onload = () => {
                 html: squareHtml,
                 alive: false,
                 pitch: pitchName,
-                instrument: synth,
+                instrument: synth
             };
 
             const newNextSquare = {
                 color: "blue",
                 alive: false,
-                pitch: pitchName,
-                instrument: synth,
+                pitch: pitchName
             };
 
             squareHtml.addEventListener("mousedown", (e) => {
@@ -153,12 +169,12 @@ function advanceClock() {
                 neighborCount++;
 
             // The algorithm for Conway's Game of Life
-            if (neighborCount == 3 || neighborCount == 2 && currentSquares[i][j].alive) {
-              nextSquares[i][j].alive = true;
-              nextSquares[i][j].color = "green";
+            if ((neighborCount == 3) || (neighborCount == 2 && currentSquares[i][j].alive)) {
+                nextSquares[i][j].alive = true;
+                nextSquares[i][j].color = "green";
             } else {
-              nextSquares[i][j].alive = false;
-              nextSquares[i][j].color = "blue";
+                nextSquares[i][j].alive = false;
+                nextSquares[i][j].color = "blue";
             }
 
             if (currentSquares[i][j].alive) {
@@ -173,6 +189,35 @@ function advanceClock() {
         for (let j = 0; j < ROWS; ++j) {
             currentSquares[i][j].alive = nextSquares[i][j].alive;
             currentSquares[i][j].html.style.backgroundColor = nextSquares[i][j].color;
+        }
+    }
+}
+
+function savePreset(name) {
+    let boardState = {};
+    for (let i = 0; i < COLUMNS; ++i) {
+        for (let j = 0; j < ROWS; ++j) {
+            let squareId = `r${i}c${j}`;
+            boardState[squareId] = currentSquares[i][j].alive;
+        }
+    }
+    presets[name] = boardState;
+    console.log(presets);
+
+    presetMenu.options[presetMenu.options.length] = new Option(name);
+}
+
+function loadPreset() {
+    let presetName = presetMenu.value;
+    console.log(`presetName: ${presetName}`)
+    console.log(presets[presetName]);
+    for (let i = 0; i < COLUMNS; ++i) {
+        for (let j = 0; j < ROWS; ++j) { 
+            currentSquares[i][j].alive = presets[presetName][`r${i}c${j}`];
+            if (currentSquares[i][j].alive) 
+                currentSquares[i][j].html.style.backgroundColor = "green";
+            else
+                currentSquares[i][j].html.style.backgroundColor = "blue";
         }
     }
 }

@@ -19,6 +19,13 @@
                 <span id="start-box" class="close" onclick="closeModal()">Click to start</span>
             </div>
         </div>
+            <input type="text" class="preset-controls" id="preset-input">
+            <button class="preset-controls" id="save-preset-button" onclick="savePreset()">Save preset</button>
+            <select id="preset-menu" class="preset-controls" onchange="loadPreset()">
+                <option value="blinker">Blinker</option>
+                <option value="gosper-glider">Gosper glider</option>
+            </select>
+        </div>
         <div id="row">
             <div id="column">
                 <div class="container" id="grid"></div>
