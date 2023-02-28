@@ -101,7 +101,7 @@ window.onload = () => {
             grid.appendChild(squareHtml);
             const pitchName = pitches[j % pitches.length] + octave;
             
-            console.log(pitchName);
+            console.log(`${divId} ${pitchName}`);
 
             // Volume is in decibels
             const synth = new Tone.Synth({volume: -30}).connect(envelope);
@@ -134,8 +134,14 @@ window.onload = () => {
     }
 }
 
+/*
+Plays correct sound twice without updating
+Updates and plays same sound
+*/
+
 function start(){
     running = true;
+    playNotes();
     clockID = setInterval(advanceClock, TEMPO);
 };
 
@@ -144,9 +150,25 @@ function stop(){
     clearInterval(clockID);
 }
 
-function advanceClock() {
+async function advanceClock() {
+    updateGrid();
+    playNotes();
+}
+
+function playNotes() {
     // The 0.5 here means that the envelope will trigger the release 0.5 seconds after the attack
     envelope.triggerAttackRelease("0.5");
+
+    for (let i = 0; i < COLUMNS; ++i) {
+        for (let j = 0; j < ROWS; ++j) {
+            if (currentSquares[i][j].alive) {
+                currentSquares[i][j].instrument.triggerAttackRelease(currentSquares[i][j].pitch, 1.0);
+            }
+        }
+    }
+}
+
+function updateGrid() {
     for (let i = 0; i < ROWS; ++i) {
         for (let j = 0; j < COLUMNS; ++j) {
             let neighborCount = 0;
@@ -177,10 +199,6 @@ function advanceClock() {
                 nextSquares[i][j].color = "blue";
             }
 
-            if (currentSquares[i][j].alive) {
-                currentSquares[i][j].instrument.triggerAttackRelease(currentSquares[i][j].pitch, 1.0);
-            }
-
             // console.log("neighborCount for row " + i + " column " + j + ": " + neighborCount);
         }
     }
@@ -191,6 +209,12 @@ function advanceClock() {
             currentSquares[i][j].html.style.backgroundColor = nextSquares[i][j].color;
         }
     }
+
+}
+
+function advanceClock() {
+    setTimeout(updateGrid, TEMPO);
+    playNotes();
 }
 
 function savePreset(name) {
