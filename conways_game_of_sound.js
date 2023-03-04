@@ -1,9 +1,11 @@
 let grid; // will eventually hold html element to which all grid squares are attached as children
-let ROWS = 10;
-let COLUMNS = 10;
+const ROWS = 10;
+const COLUMNS = 10;
 let running = false; // Boolean for whether clock is running 
-let clockID; // Id returned by setInterval to use for stopping clock
-let TEMPO = 1000; // milliseconds per clock tick
+let notesClock;
+let gridClock;
+let clockId;
+const TEMPO = 1000; // milliseconds per clock tick
 let presets = {}; // dictionary of supplied and user created presets which themselves are dictionaries
 let savePresetButton;
 let presetsMenu;
@@ -95,7 +97,8 @@ window.onload = () => {
         let octave = 2 + i % octaves;
         for (let j = 0; j < ROWS; ++j) {
             const squareHtml = document.createElement("div");
-            const divId = `r${i}c${j}`;
+            // Rows and columns will start with 1 and not 0. This is referred to as one-based array indexing.
+            const divId = `r${i+1}c${j+1}`;
             squareHtml.id = divId;
             squareHtml.style.backgroundColor = "blue";
             grid.appendChild(squareHtml);
@@ -139,29 +142,16 @@ Plays correct sound twice without updating
 Updates and plays same sound
 */
 
-function start(){
-    running = true;
-    playNotes();
-    clockID = setInterval(advanceClock, TEMPO);
-};
-
-function stop(){
-    running = false;
-    clearInterval(clockID);
-}
-
-async function advanceClock() {
-    updateGrid();
-    playNotes();
-}
 
 function playNotes() {
+    console.log("playing notes");
     // The 0.5 here means that the envelope will trigger the release 0.5 seconds after the attack
     envelope.triggerAttackRelease("0.5");
 
     for (let i = 0; i < COLUMNS; ++i) {
         for (let j = 0; j < ROWS; ++j) {
             if (currentSquares[i][j].alive) {
+                console.log(`${currentSquares[i][j].html.id}: ${currentSquares[i][j].pitch}`);
                 currentSquares[i][j].instrument.triggerAttackRelease(currentSquares[i][j].pitch, 1.0);
             }
         }
@@ -169,6 +159,7 @@ function playNotes() {
 }
 
 function updateGrid() {
+    console.log("updating grid")
     for (let i = 0; i < ROWS; ++i) {
         for (let j = 0; j < COLUMNS; ++j) {
             let neighborCount = 0;
@@ -213,8 +204,28 @@ function updateGrid() {
 }
 
 function advanceClock() {
-    setTimeout(updateGrid, TEMPO);
+    console.log("advancing clock");
+    /*new Promise((resolve, reject) => {
+        playNotes();
+        setTimeout(()=>{}, 1000));
+    }).then(() => {
+        console.log(".then")
+        updateGrid();  
+    });*/
     playNotes();
+    setTimeout(()=>{updateGrid();}, TEMPO * 0.9);
+}
+
+function start() {
+    running = true;
+    //advanceClock();
+    clockId = setInterval(advanceClock, TEMPO);
+    console.log(`clockId: ${clockId}`);
+};
+
+function stop() {
+    running = false;
+    clearInterval(clockId);
 }
 
 function savePreset(name) {
