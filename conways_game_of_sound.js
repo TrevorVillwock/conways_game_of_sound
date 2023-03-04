@@ -205,13 +205,6 @@ function updateGrid() {
 
 function advanceClock() {
     console.log("advancing clock");
-    /*new Promise((resolve, reject) => {
-        playNotes();
-        setTimeout(()=>{}, 1000));
-    }).then(() => {
-        console.log(".then")
-        updateGrid();  
-    });*/
     playNotes();
     setTimeout(()=>{updateGrid();}, TEMPO * 0.9);
 }

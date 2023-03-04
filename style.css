@@ -106,9 +106,10 @@ explanation of auto-fill: https://www.w3.org/TR/css3-grid-layout/#fr-unit
   width: 200px;
 }
 */
-.presets-controls {
-  height: 50px;
-  width: 200px;
+.preset-controls {
+  height: 100px;
+  width: 400px;
+  font-size: medium;
 }
 
 /* uncomment the CSS below to add a red border to every html object */
